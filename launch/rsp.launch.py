@@ -10,6 +10,10 @@ from launch_ros.actions import Node
 import xacro
 
 
+from launch.substitutions import Command, FindExecutable, PathJoinSubstitution
+from launch_ros.substitutions import FindPackageShare
+
+
 def generate_launch_description():
 
     # Check if we're told to use sim time
@@ -20,6 +24,12 @@ def generate_launch_description():
     xacro_file = os.path.join(pkg_path,'description','robot.urdf.xacro')
     robot_description_config = xacro.process_file(xacro_file)
     
+
+    # Convert URDF to a string
+    urdf_file = os.path.join(pkg_path, 'description', 'robot.urdf')
+    with open(urdf_file, 'w') as urdf:
+        urdf.write(robot_description_config.toxml())
+
     # Create a robot_state_publisher node
     params = {'robot_description': robot_description_config.toxml(), 'use_sim_time': use_sim_time}
     node_robot_state_publisher = Node(
@@ -27,6 +37,13 @@ def generate_launch_description():
         executable='robot_state_publisher',
         output='screen',
         parameters=[params]
+    )
+
+    joint_state_publisher = Node(
+        package="joint_state_publisher_gui",
+        executable="joint_state_publisher_gui",
+        arguments=[urdf_file],
+        output="both",
     )
 
 
@@ -37,5 +54,6 @@ def generate_launch_description():
             default_value='false',
             description='Use sim time if true'),
 
-        node_robot_state_publisher
+        node_robot_state_publisher,
+        joint_state_publisher
     ])

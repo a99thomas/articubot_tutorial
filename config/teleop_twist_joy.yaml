@@ -1,0 +1,18 @@
+teleop_twist_joy_node:
+  ros__parameters:
+    # Joystick axis mappings for angular (rotation) movement
+    axis_angular:
+      pitch: 3              # Example axis for pitch (rotational movement)
+      roll: 4               # Example axis for roll (rotational movement)
+      yaw: 0                # Example axis for yaw (rotational movement)
+
+    # Joystick axis mappings for linear (translational) movement
+    axis_linear:
+      x: 1                  # Example axis for forward/backward movement
+      y: 0                  # Example axis for left/right movement
+      z: 2                  # Example axis for up/down movement
+    enable_turbo_button: 0
+
+
+    # Whether an enable button is required to operate
+    require_enable_button: False
